@@ -34,13 +34,6 @@ struct CornerViewModel {
 
 class DrillViewModel: ObservableObject {
     var audioPlayers: [AVAudioPlayer]!
-    var audioPlayerOne: AVAudioPlayer!
-    var audioPlayerTwo: AVAudioPlayer!
-    var audioPlayerThree: AVAudioPlayer!
-    var audioPlayerFour: AVAudioPlayer!
-    var audioPlayerFive: AVAudioPlayer!
-    var audioPlayerSix: AVAudioPlayer!
-    
     @Published var corners: [CornerViewModel] = [
         .init(id: .topLeft),
         .init(id: .topRight),
@@ -49,7 +42,7 @@ class DrillViewModel: ObservableObject {
         .init(id: .bottomLeft),
         .init(id: .bottomRight),
     ]
-    @Published var recoveryTime: Double = 1
+    @Published var recoveryTime: Double = 0.8
     @Published var setInterval: Double = 30
     @Published var previewTimer: Double = 0.6
     @Published var numSets: Int = 5
