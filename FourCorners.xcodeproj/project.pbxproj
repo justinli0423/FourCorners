@@ -7,7 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		52D071462740B1A600437BB7 /* beep.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 52D071452740B1A600437BB7 /* beep.mp3 */; };
+		522B67BC2740C3490092A256 /* one.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 522B67B62740C3490092A256 /* one.mp3 */; };
+		522B67BD2740C3490092A256 /* three.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 522B67B72740C3490092A256 /* three.mp3 */; };
+		522B67BE2740C3490092A256 /* five.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 522B67B82740C3490092A256 /* five.mp3 */; };
+		522B67BF2740C3490092A256 /* six.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 522B67B92740C3490092A256 /* six.mp3 */; };
+		522B67C02740C3490092A256 /* four.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 522B67BA2740C3490092A256 /* four.mp3 */; };
+		522B67C12740C3490092A256 /* two.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 522B67BB2740C3490092A256 /* two.mp3 */; };
 		52DF65D8274055570098A319 /* FourCornersApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52DF65D7274055570098A319 /* FourCornersApp.swift */; };
 		52DF65DA274055570098A319 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52DF65D9274055570098A319 /* ContentView.swift */; };
 		52DF65DC274055580098A319 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 52DF65DB274055580098A319 /* Assets.xcassets */; };
@@ -15,7 +20,12 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		52D071452740B1A600437BB7 /* beep.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = beep.mp3; sourceTree = "<group>"; };
+		522B67B62740C3490092A256 /* one.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = one.mp3; sourceTree = "<group>"; };
+		522B67B72740C3490092A256 /* three.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = three.mp3; sourceTree = "<group>"; };
+		522B67B82740C3490092A256 /* five.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = five.mp3; sourceTree = "<group>"; };
+		522B67B92740C3490092A256 /* six.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = six.mp3; sourceTree = "<group>"; };
+		522B67BA2740C3490092A256 /* four.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = four.mp3; sourceTree = "<group>"; };
+		522B67BB2740C3490092A256 /* two.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = two.mp3; sourceTree = "<group>"; };
 		52DF65D4274055570098A319 /* FourCorners.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FourCorners.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		52DF65D7274055570098A319 /* FourCornersApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FourCornersApp.swift; sourceTree = "<group>"; };
 		52DF65D9274055570098A319 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -53,7 +63,12 @@
 		52DF65D6274055570098A319 /* FourCorners */ = {
 			isa = PBXGroup;
 			children = (
-				52D071452740B1A600437BB7 /* beep.mp3 */,
+				522B67B82740C3490092A256 /* five.mp3 */,
+				522B67BA2740C3490092A256 /* four.mp3 */,
+				522B67B62740C3490092A256 /* one.mp3 */,
+				522B67B92740C3490092A256 /* six.mp3 */,
+				522B67B72740C3490092A256 /* three.mp3 */,
+				522B67BB2740C3490092A256 /* two.mp3 */,
 				52DF65D7274055570098A319 /* FourCornersApp.swift */,
 				52DF65D9274055570098A319 /* ContentView.swift */,
 				52DF65DB274055580098A319 /* Assets.xcassets */,
@@ -128,9 +143,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				522B67BC2740C3490092A256 /* one.mp3 in Resources */,
+				522B67C02740C3490092A256 /* four.mp3 in Resources */,
+				522B67BE2740C3490092A256 /* five.mp3 in Resources */,
 				52DF65DF274055580098A319 /* Preview Assets.xcassets in Resources */,
+				522B67BF2740C3490092A256 /* six.mp3 in Resources */,
 				52DF65DC274055580098A319 /* Assets.xcassets in Resources */,
-				52D071462740B1A600437BB7 /* beep.mp3 in Resources */,
+				522B67BD2740C3490092A256 /* three.mp3 in Resources */,
+				522B67C12740C3490092A256 /* two.mp3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -200,6 +220,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -255,6 +276,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;

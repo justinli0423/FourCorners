@@ -33,7 +33,14 @@ struct CornerViewModel {
 }
 
 class DrillViewModel: ObservableObject {
-    var audioPlayer: AVAudioPlayer!
+    var audioPlayers: [AVAudioPlayer]!
+    var audioPlayerOne: AVAudioPlayer!
+    var audioPlayerTwo: AVAudioPlayer!
+    var audioPlayerThree: AVAudioPlayer!
+    var audioPlayerFour: AVAudioPlayer!
+    var audioPlayerFive: AVAudioPlayer!
+    var audioPlayerSix: AVAudioPlayer!
+    
     @Published var corners: [CornerViewModel] = [
         .init(id: .topLeft),
         .init(id: .topRight),
@@ -42,9 +49,9 @@ class DrillViewModel: ObservableObject {
         .init(id: .bottomLeft),
         .init(id: .bottomRight),
     ]
-    @Published var recoveryTime: Double = 0.6
+    @Published var recoveryTime: Double = 1
     @Published var setInterval: Double = 30
-    @Published var previewTimer: Double = 1
+    @Published var previewTimer: Double = 0.6
     @Published var numSets: Int = 5
     @Published var numBirdsPerSet: Int = 20
     @Published var isSoundEnabled: Bool = false
@@ -61,9 +68,20 @@ class DrillViewModel: ObservableObject {
         remainingBirdsPerSet = numBirdsPerSet
         
         if isSoundEnabled,
-           let path = Bundle.main.path(forResource: "beep", ofType: "mp3") {
+           let pathOne = Bundle.main.path(forResource: "one", ofType: "mp3"),
+           let pathTwo = Bundle.main.path(forResource: "two", ofType: "mp3"),
+           let pathThree = Bundle.main.path(forResource: "three", ofType: "mp3"),
+           let pathFour = Bundle.main.path(forResource: "four", ofType: "mp3"),
+           let pathFive = Bundle.main.path(forResource: "five", ofType: "mp3"),
+           let pathSix = Bundle.main.path(forResource: "six", ofType: "mp3"){
             do {
-                audioPlayer = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: path))
+                audioPlayers = []
+                audioPlayers.append(try AVAudioPlayer(contentsOf: URL(fileURLWithPath: pathOne)))
+                audioPlayers.append(try AVAudioPlayer(contentsOf: URL(fileURLWithPath: pathTwo)))
+                audioPlayers.append(try AVAudioPlayer(contentsOf: URL(fileURLWithPath: pathThree)))
+                audioPlayers.append(try AVAudioPlayer(contentsOf: URL(fileURLWithPath: pathFour)))
+                audioPlayers.append(try AVAudioPlayer(contentsOf: URL(fileURLWithPath: pathFive)))
+                audioPlayers.append(try AVAudioPlayer(contentsOf: URL(fileURLWithPath: pathSix)))
             } catch {
                 print( "Could not find file")
             }
@@ -186,15 +204,15 @@ class DrillViewModel: ObservableObject {
         let probability = Double.random(in: 0...1)
         var isCornerSelected = false
         
-        corners = corners.map { viewModel in
+        corners = corners.enumerated().map { (index, viewModel) in
             var vm = viewModel
-            if probability <= vm.probability && !isCornerSelected {
+            if probability <= vm.probability && !isCornerSelected && viewModel.isEnabled {
                 isCornerSelected = true
                 vm.lastVisited = true
                 vm.isActive = true
                 
                 if isSoundEnabled && drillInProgress {
-                    audioPlayer.play()
+                    audioPlayers[index].play()
                 }
             }
             return vm
@@ -305,30 +323,36 @@ struct ContentView: View {
                         Circle()
                             .foregroundColor(drillViewModel.corners[0].isActive ? Color.red : Color.gray)
                             .frame(width: 80, height: 80)
+                            .overlay(Text("1").font(.title))
                         Spacer()
                         Circle()
                             .foregroundColor(drillViewModel.corners[1].isActive ? Color.red : Color.gray)
                             .frame(width: 80, height: 80)
+                            .overlay(Text("2").font(.title))
                     }
                     Spacer()
                     HStack {
                         Circle()
                             .foregroundColor(drillViewModel.corners[2].isActive ? Color.red : Color.gray)
                             .frame(width: 80, height: 80)
+                            .overlay(Text("3").font(.title))
                         Spacer()
                         Circle()
                             .foregroundColor(drillViewModel.corners[3].isActive ? Color.red : Color.gray)
                             .frame(width: 80, height: 80)
+                            .overlay(Text("4").font(.title))
                     }
                     Spacer()
                     HStack {
                         Circle()
                             .foregroundColor(drillViewModel.corners[4].isActive ? Color.red : Color.gray)
                             .frame(width: 80, height: 80)
+                            .overlay(Text("5").font(.title))
                         Spacer()
                         Circle()
                             .foregroundColor(drillViewModel.corners[5].isActive ? Color.red : Color.gray)
                             .frame(width: 80, height: 80)
+                            .overlay(Text("6").font(.title))
                     }
                     .padding(.bottom, 20)
                 }
@@ -365,7 +389,7 @@ struct ContentView: View {
                     
                     Slider(
                         value: $drillViewModel.recoveryTime,
-                        in: 0.1...1.55,
+                        in: 0.3...1.55,
                         step: 0.05,
                         onEditingChanged: { editing in
                             isEditingInterval = editing
@@ -382,7 +406,7 @@ struct ContentView: View {
                     
                     Slider(
                         value: $drillViewModel.previewTimer,
-                        in: 0.1...1.55,
+                        in: 0.3...1.55,
                         step: 0.05,
                         onEditingChanged: { editing in
                             isEditingPreview = editing
@@ -411,7 +435,11 @@ struct ContentView: View {
             
             Toggle("Sound: ", isOn: $drillViewModel.isSoundEnabled).disabled(drillViewModel.drillInProgress)
             
-            Text(initialTimer != nil ? "Starting in: \(initialTimer != nil ? String(initialCountdown) : "")" : "").foregroundColor(.red)
+            HStack {
+                Spacer()
+                Text(initialTimer != nil ? "Starting in \(initialTimer != nil ? String(initialCountdown) : "")" : "").foregroundColor(.red)
+                Spacer()
+            }
             
             ZStack(alignment: .center) {
                 courtBackground
@@ -422,14 +450,14 @@ struct ContentView: View {
                             .frame(width: 50, height: 50)
                             .onTapGesture {
                                 drillViewModel.corners[0].isEnabled.toggle()
-                            }
+                            }.overlay(Text("1").font(.title))
                         Spacer()
                         Circle()
                             .foregroundColor(drillViewModel.corners[1].isEnabled ? Color.red : Color.gray)
                             .frame(width: 50, height: 50)
                             .onTapGesture {
                                 drillViewModel.corners[1].isEnabled.toggle()
-                            }
+                            }.overlay(Text("2").font(.title))
                     }
                     Spacer()
                     HStack {
@@ -438,14 +466,14 @@ struct ContentView: View {
                             .frame(width: 50, height: 50)
                             .onTapGesture {
                                 drillViewModel.corners[2].isEnabled.toggle()
-                            }
+                            }.overlay(Text("3").font(.title))
                         Spacer()
                         Circle()
                             .foregroundColor(drillViewModel.corners[3].isEnabled ? Color.red : Color.gray)
                             .frame(width: 50, height: 50)
                             .onTapGesture {
                                 drillViewModel.corners[3].isEnabled.toggle()
-                            }
+                            }.overlay(Text("4").font(.title))
                     }
                     Spacer()
                     HStack {
@@ -454,14 +482,14 @@ struct ContentView: View {
                             .frame(width: 50, height: 50)
                             .onTapGesture {
                                 drillViewModel.corners[4].isEnabled.toggle()
-                            }
+                            }.overlay(Text("5").font(.title))
                         Spacer()
                         Circle()
                             .foregroundColor(drillViewModel.corners[5].isEnabled ? Color.red : Color.gray)
                             .frame(width: 50, height: 50)
                             .onTapGesture {
                                 drillViewModel.corners[5].isEnabled.toggle()
-                            }
+                            }.overlay(Text("6").font(.title))
                     }
                     .padding(.bottom, 30)
                 }
