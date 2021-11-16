@@ -47,7 +47,7 @@ class DrillViewModel: ObservableObject {
     @Published var previewTimer: Double = 0.6
     @Published var numSets: Int = 5
     @Published var numBirdsPerSet: Int = 20
-    @Published var isSoundEnabled: Bool = false
+    @Published var isSoundEnabled: Bool = true
     
     @Published var remainingBreakTime: Double = 30
     @Published var remainingSets: Int = 5
@@ -85,16 +85,10 @@ class DrillViewModel: ObservableObject {
     }
     
     func setupCorners() {
-        var lastUsedIndex: Int? = nil
-        
         // reset and cache last used index
         corners = corners.enumerated().map { (index, viewModel) in
             var vm = viewModel
-            if vm.lastVisited {
-                lastUsedIndex = index
-            }
             vm.isActive = false
-            vm.lastVisited = false
             return vm
         }
         
@@ -103,43 +97,36 @@ class DrillViewModel: ObservableObject {
         }.count
         
         var probability = Double(1)/Double(numCornersEnabled)
+        var indexCount = 0
+        var isLastUsedIndexMet = false
         
-        if let lastUsedIndex = lastUsedIndex {
-            let lastCornerProbability = probability / 2
-            probability = Double(1 - Double(lastCornerProbability)) / Double(numCornersEnabled - 1)
+        let lastCornerProbability = probability / 2
+        probability = Double(1 - Double(lastCornerProbability)) / Double(numCornersEnabled - 1)
+        
+        corners = corners.enumerated().map { (index, viewModel) -> CornerViewModel in
+            guard viewModel.isEnabled else {
+                return viewModel
+            }
             
-            corners = corners.enumerated().map { (index, viewModel) -> CornerViewModel in
-                guard viewModel.isEnabled else {
-                    return viewModel
-                }
-                
-                var newVM = viewModel
-                
-                if index < lastUsedIndex {
-                    newVM.probability = Double(index + 1) * probability
-                } else {
-                    newVM.probability = Double(index) * probability + lastCornerProbability
-                }
-                
-                if index == corners.count - 1 {
-                    newVM.probability = 1
-                }
-                return newVM
+            var newVM = viewModel
+
+            if viewModel.lastVisited {
+                newVM.lastVisited = false
+                isLastUsedIndexMet = true
             }
-        } else {
-            corners = corners.enumerated().map { (index, viewModel) -> CornerViewModel in
-                guard viewModel.isEnabled else {
-                    return viewModel
-                }
-                
-                var newVM = viewModel
-                newVM.probability = Double(index + 1) * probability
-                
-                if index == corners.count - 1 {
-                    newVM.probability = 1
-                }
-                return newVM
+            
+            if isLastUsedIndexMet {
+                newVM.probability = Double(indexCount) * probability + lastCornerProbability
+            } else {
+                newVM.probability = Double(indexCount + 1) * probability
             }
+            
+            indexCount += 1
+            
+            if indexCount == numCornersEnabled {
+                newVM.probability = 1
+            }
+            return newVM
         }
     }
     
@@ -240,6 +227,7 @@ struct ContentView: View {
     @State private var isEditingInterval = false
     @State private var isEditingSetInterval = false
     @State private var isEditingPreview = false
+    @State private var drillDifficulty = 3
     
     @State var initialCountdown = 5
     @State var initialTimer: Timer? = nil
@@ -358,6 +346,34 @@ struct ContentView: View {
     var setupDrillView: some View {
         VStack (alignment: .leading, spacing: 4) {
             HStack {
+                Text("Difficulty: ")
+                Picker("Difficulty", selection: $drillDifficulty) {
+                    Text("Easy").tag(0)
+                    Text("Medium").tag(1)
+                    Text("Hard").tag(2)
+                    Text("Professional").tag(3)
+                }.disabled(drillViewModel.drillInProgress)
+                    .onChange(of: drillDifficulty) { tag in
+                        if tag == 0 {
+                            drillViewModel.previewTimer = 1.1
+                            drillViewModel.recoveryTime = 1.4
+                        }
+                        if tag == 1 {
+                            drillViewModel.previewTimer = 1
+                            drillViewModel.recoveryTime = 1.2
+                        }
+                        if tag == 2 {
+                            drillViewModel.previewTimer = 0.8
+                            drillViewModel.recoveryTime = 1.1
+                        }
+                        if tag == 3 {
+                            drillViewModel.previewTimer = 0.6
+                            drillViewModel.recoveryTime = 0.8
+                        }
+                    }
+            }
+            
+            HStack {
                 Text("Set Interval: ")
                 HStack {
                     Text("\(String(format: "%.0f", drillViewModel.setInterval)) s")
@@ -382,7 +398,7 @@ struct ContentView: View {
                     
                     Slider(
                         value: $drillViewModel.recoveryTime,
-                        in: 0.3...1.55,
+                        in: 0.3...1.6,
                         step: 0.05,
                         onEditingChanged: { editing in
                             isEditingInterval = editing
@@ -399,7 +415,7 @@ struct ContentView: View {
                     
                     Slider(
                         value: $drillViewModel.previewTimer,
-                        in: 0.3...1.55,
+                        in: 0.3...1.6,
                         step: 0.05,
                         onEditingChanged: { editing in
                             isEditingPreview = editing
@@ -484,7 +500,6 @@ struct ContentView: View {
                                 drillViewModel.corners[5].isEnabled.toggle()
                             }.overlay(Text("6").font(.title))
                     }
-                    .padding(.bottom, 30)
                 }
                 .padding(.vertical, 40)
                 .padding(.horizontal, 12)
