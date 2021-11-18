@@ -5,6 +5,7 @@
 //  Created by Justin Li on 2021-11-13.
 //
 
+import UIKit
 import SwiftUI
 import AVKit
 
@@ -239,6 +240,10 @@ struct ContentView: View {
             
             if drillViewModel.drillInProgress {
                 drillInProgressView
+                    .onAppear {
+                        UIApplication.shared.isIdleTimerDisabled = true
+                    }
+
             } else {
                 setupDrillView
             }
